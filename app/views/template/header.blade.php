@@ -48,7 +48,10 @@
 		    <li role="presentation"><a role="menuitem" tabindex="-1" href="{{URL::route('profile_get', array(Sentry::getUser()->id))}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Trang cá nhân</a></li>
 		    @if(Sentry::getUser()->hasAccess("admin"))
 		    <li role="presentation"><a role="menuitem" tabindex="-1" href="{{URL::to('categorie/list')}}"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> Quản lý chủ đề</a></li>
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="{{URL::route('get_group')}}"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Quản lý group</a></li>
 		    <li role="presentation"><a role="menuitem" tabindex="-1" href="{{URL::route('get_chart')}}"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> Thống kê</a></li>
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="{{URL::route('get_report')}}"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Tạo báo cáo</a></li>
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="{{URL::route('get_all_pdf')}}"><span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span> Các báo cáo đã lưu</a></li>
 		    @endif
 		    <li role="presentation"><a role="menuitem" tabindex="-1" href="{{URL::route('changepass_get')}}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Đổi mật khẩu</a></li>
 		    <li role="presentation"><a role="menuitem" tabindex="-1" href="{{URL::route('logout_get')}}"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>  Thoát</a></li>

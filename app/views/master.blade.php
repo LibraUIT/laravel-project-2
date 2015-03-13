@@ -21,7 +21,9 @@
 		@include("template.menu")
 	</div>
 </div>
-<div class="bottom"></div>
+<div class="bottom">
+	Copy &copy; 2014 - Quan Nguyen
+</div>
 	{{HTML::script('public/js/jquery-1.9.1.min.js')}}
 	{{HTML::script('public/js/bootstrap.js')}}
 	{{HTML::script('public/js/jquery.Jcrop.js')}}
@@ -36,6 +38,8 @@
 	{{HTML::script('public/js/modules/exporting.js')}}
 
 	{{HTML::script('public/js/jquery.tagcloud.js')}}
+
+	{{HTML::script('public/js/bootstrap-select.js')}}
 	@yield("data_code")
 </body>
 <script type="text/javascript">

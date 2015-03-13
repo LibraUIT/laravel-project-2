@@ -17,8 +17,8 @@ class User extends Cartalyst\Sentry\Users\Eloquent\User {
 			"username.unique"   => "Tên truy cập của bạn đã tồn tại",
 			"repassword.required" => "Vui lòng nhập xác nhận mật khẩu",
 			"repassword.same"   => "Mật khẩu và xác nhận mật khẩu, không chính xác",
-			"recaptcha_response_field.required" => "Vui lòng nhập mã xác nhận",
-			"recaptcha_response_field.recaptcha" => "Mã xác nhận không chính xác",
+			"g-recaptcha-response.required" => "Vui lòng nhập mã xác nhận",
+			"g-recaptcha-response.recaptcha" => "Mã xác nhận không chính xác",
 			"oldpassword.required"  => "Vui lòng nhập mật khẩu cũ",
 			"newpassword.required"  => "Vui lòng nhập mật khẩu mới",
 			"renewpassword.required" => "Vui lòng nhập xác nhận mật khẩu mới",
@@ -36,17 +36,17 @@ class User extends Cartalyst\Sentry\Users\Eloquent\User {
 			"username"   => "required|min:4|unique:users,username",
 			"password"   => "required|min:5",
 			"repassword" => "required|same:password",
-			'recaptcha_response_field' => 'required|recaptcha',
+			'g-recaptcha-response' => 'required|recaptcha',
 		);
 	public static $changepass_rules=array(
 			"oldpassword" => "required",
 			"newpassword" => "required|min:5",
 			"renewpassword" => "required|same:newpassword",
-			'recaptcha_response_field' => 'required|recaptcha',			
+			'g-recaptcha-response' => 'required|recaptcha',			
 		);
 	public static $forgot_rules=array(
 			"username"  => "required",
-			'recaptcha_response_field' => 'required|recaptcha',			
+			'g-recaptcha-response' => 'required|recaptcha',			
 		);
 	public function questions(){
 		return $this->hasMany("Question","userID");
@@ -54,6 +54,14 @@ class User extends Cartalyst\Sentry\Users\Eloquent\User {
 	public function answers()
 	{
 		return $this->hasMany("Answer", "userID");
+	}
+	public function pdfs()
+	{
+		return $this->hasMany("Pdf","userID");
+	}
+	public function users_groups()
+	{
+		return $this->hasMany("Users_group", "user_id");
 	}
 	//
 	public static $rename_rules = array(

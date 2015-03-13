@@ -60,7 +60,9 @@ class AnswerController extends BaseController{
 		$answer = Answer::with("questions")->find($id);
 		if($answer)
 		{
-			if(Sentry::getUser()->hasAccess("admin") || $answer->question->userID == Sentry::getUser()->id)
+			$admin = Sentry::findGroupByName('Administrator');
+			$mod = Sentry::findGroupByName('Moderator');
+			if( Sentry::getUser()->inGroup($admin) || Sentry::getUser()->inGroup($mod) ||$answer->questions->userID == Sentry::getUser()->id)
 			{
 				Answer::where("questionID", $answer->questionID)->update(array("correct"=>"0"));
 				$answer->correct = "1";

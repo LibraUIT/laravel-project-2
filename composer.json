@@ -8,7 +8,8 @@
 		"laravel/framework": "4.2.*",
 		"cartalyst/sentry": "2.1.*",
 		"greggilbert/recaptcha": "dev-master",
-		"brainboxlabs/brain-socket": "v1.0.0"
+		"brainboxlabs/brain-socket": "v1.0.0",
+		"maxxscho/laravel-tcpdf": "0.*"
 	},
 	"autoload": {
 		"classmap": [

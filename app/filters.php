@@ -104,10 +104,15 @@ Route::filter('is_login', function($route, $request){
 Route::filter('check_access', function($route, $request, $role){
 	if(Sentry::check())
 	{
-		if(!Sentry::getUser()->hasAccess($role))
+		/*if(!Sentry::getUser()->hasAccess($role))
 		{
 			return Redirect::route('index')->with('error', 'Tai khoan cua ban khong du quyen truy cap thao tac nay');
-		}
+		}*/
+		$user = Sentry::getUser();
+  		$admin = Sentry::findGroupByName('Administrator');
+  		if (!$user->inGroup($admin)){
+  			return Redirect::route('index')->with('error', 'Tai khoan cua ban khong du quyen truy cap thao tac nay');
+  		}
 	}else
 	{
 		return Redirect::route('index')->with('error', 'Ban phai dang nhap de thuc hien thao tac nay');

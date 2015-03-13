@@ -10,7 +10,7 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
-View::composer(array("template.menu", "minhquan.index"), function($view){
+View::composer(array("template.menu", "minhquan.index", "minhquan.report"), function($view){
 	//$menu = Categorie::all();
 	$menu = Cache::rememberForever("menu", function(){
 		return Categorie::all();
@@ -42,6 +42,58 @@ Route::get('member/test',array("as"=>"test","uses"=>"AuthController@test"));
 		));
 	return "Done";
 });*/
+
+Route::get('create_group', function(){
+	try
+{
+    // Create the group
+    $group = Sentry::createGroup(array(
+        'name'        => 'Moderator',
+        'permissions' => array(
+            'users' => 1,
+        ),
+    ));
+}
+catch (Cartalyst\Sentry\Groups\NameRequiredException $e)
+{
+    echo 'Name field is required';
+}
+catch (Cartalyst\Sentry\Groups\GroupExistsException $e)
+{
+    echo 'Group already exists';
+}
+});
+
+Route::get('update_group', function(){
+	try
+{
+    // Find the user using the user id
+    $user = Sentry::findUserById(3);
+
+    // Find the group using the group id
+    $adminGroup = Sentry::findGroupById(1);
+
+    // Assign the group to the user
+    if ($user->addGroup($adminGroup))
+    {
+        // Group assigned successfully
+        echo "successfully";
+    }
+    else
+    {
+        // Group was not assigned
+    }
+}
+catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+{
+    echo 'User was not found.';
+}
+catch (Cartalyst\Sentry\Groups\GroupNotFoundException $e)
+{
+    echo 'Group was not found.';
+}
+});
+
 Route::get('create_cate', function(){
 	/*Categorie::create(array(
 			"title" => "Midle PHP"
@@ -108,8 +160,66 @@ Route::group(array("before"=>"check_access:admin"), function(){
 		Cache::flush();
 		return "Done";
 	});
+	Route::get('group', array('as'=>'get_group', 'uses'=>'AuthController@getGroup'));
+
+	Route::post('group/create', array('as'=>'post_create_group', 'uses'=>'AuthController@postCreateGroup'));
+
+	Route::get('group/delete/{id}', array('as'=>'get_delete_group', 'uses'=>'AuthController@postDeleteGroup'))->where(array("id"=>"[0-9]+"));
 
 	Route::get('chart', array("as"=>"get_chart", "uses"=>"MainController@getChart"));
+
+	Route::get('report', array("as"=>"get_report", "uses"=>"MainController@getReport"));
+
+	Route::get('pdf/all', array('as'=>'get_all_pdf', 'uses'=>'MainController@getAllPdf'));
+
+	Route::get("pdf/delete/{id}", array("as"=>"pdf_delete_get", "uses"=>"MainController@deletePdf"))->where(array("id"=>"[0-9]+"));
+
+	Route::post("pdf/create", function(){
+		if(Request::ajax()){
+				Session::put('dataSvg',Input::get("dataSvg"));
+				Session::put('title', Input::get("title"));
+				Session::put('name', Input::get("name").".pdf");
+				//return Response::Json(Session::get('dataSvg'));
+				//return Session::get('dataSvg')[0];
+				return "true";
+		}
+				
+	});
+
+	Route::post("pdf/insert", function(){
+		if(Request::ajax()){
+			$name = Input::get('name');
+			$title = Input::get('title');
+			$data = json_encode(Input::get('insertData'));
+			Pdf::create(array(
+					"title" =>  $title,
+					"name" => $name,
+					"data" => $data,
+					"userID" => Sentry::getUser()->id
+				));
+			return "true";
+		}
+	});
+	Route::post("pdf/update", function(){
+		if(Request::ajax()){
+			$id = Input::get('id');
+			$name = Input::get('name');
+			$title = Input::get('title');
+			$data = json_encode(Input::get('insertData'));
+			$pdfs = Pdf::find($id);
+			$pdf = array(
+					"title" =>  $title,
+					"name" => $name,
+					"data" => $data,
+				);
+			$pdfs->update($pdf);
+			return "true";
+		}else
+		{
+			return Response::Json(array("status"=>"error","mess"=>"Tài liệu này không tồn tại"));
+		}
+	});
+	Route::get('pdf/view/{id}', array("as"=>"get_view_pdf", "check_user", "uses"=>"MainController@getViewPdf"))->where(array("id"=>"[0-9]+"));
 });
 
 //Phan mo rong 
@@ -157,30 +267,64 @@ Route::post("chart/qanda", array("as"=>"draw_chart_ques_ans", "before"=>"check_u
 
 Route::get("search/question/{cate}/{text}", array("uses"=>"MainController@search"))->where(array("cate"=>"[0-9]+"));
 
-Route::get('testsql', function(){
-	$arr1  = array();
-	$cates = Categorie::all();
-	$categories = array();
-	$arr2 = array();
-	$arr2['name'] = 'Câu hỏi';
-	$arr3 = array();
-	$arr3['name'] = 'Trả lời';
-	foreach ($cates as $cate) {
-		$categories[] = $cate->title;
-		$questions = Question::with("categories")->where("categorieID", $cate->id)->get();
-		
-		$arr2['data'][] = count($questions);
-		$dem = 0;
-		foreach ($questions as $question) {
-			$answers = Answer::where("questionID", $question->id)->get();
-			$dem = $dem + count($answers);
-		}
-		$arr3['data'][] = $dem;
+Route::post("chart/answer/getchartbydate", array("as"=>"draw_chart_ans_by_date", "before"=>"check_user", "uses"=>"MainController@getAnswerChartByDate"));
+
+Route::post("chart/users/getchartlastloginbydate", array("as"=>"draw_chart_user_last_login_by_date", "before"=>"check_user", "uses"=>"MainController@getUserLastloginChartByDate"));
+
+Route::post("user/getuser/lastlogin", array("as"=>"get_user_last_login", "before"=>"check_user", "uses"=>"MainController@getUserLastLogin"));
+
+Route::post("chart/vs", array("as"=>"get_vs_ques_and_ans", "before"=>"check_user", "uses"=>"MainController@getQuesAndAnsChartVs"));
 
 
-	}
-	$arr1['data'][] = $arr2;
-	$arr1['data'][] = $arr3;
-	$arr1['categories'] = $categories;	
-	return Response::Json($arr1);
+Route::get("pdf/create", function(){
+
+			PDF::SetTitle(Session::get('name'));
+
+			PDF::AddPage();
+
+			PDF::SetFont('DejaVuSans', '', 8);
+
+			PDF::writeHTML('<h1 style="text-align:center;">'.Session::get('title').'</h1>', true, false, true, false, '');
+
+			$hChart = 40;
+			$dem = 0;
+			$page = 1;
+			for($i = 0; $i < count(Session::get('dataSvg')); $i++)
+			{
+				
+				File::put('pdf/images/chart.svg', Session::get('dataSvg')[$i]);
+				PDF::ImageSVG($file='pdf/images/chart.svg', $x=12, $y=$hChart, $w=180, $h='', $link='', $align='', $palign='', $border=0, $fitonpage=false);
+				$dem++;
+				if($dem == 3)
+				{
+					$hChart = 40;
+					$dem = 0;
+					if(count(Session::get('dataSvg')) > $page*3)
+					{
+						PDF::AddPage();
+						$page++;
+						PDF::SetFont('DejaVuSans', '', 8);
+
+						PDF::writeHTML('<h1 style="text-align:center;">'.Session::get('title').'</h1>', true, false, true, false, '');
+					}
+				}else
+				{
+					$hChart = $hChart +80;
+				}
+
+
+			}
+
+			PDF::Output(Session::get('name'));
 });
+
+
+Route::get('testsql', function(){
+			Pdf::create(array(
+				"title" => "lol",
+				"name" => "luuuu",
+				"data" => "Hello",
+				"userID" => Sentry::getUser()->id
+			));
+});
+

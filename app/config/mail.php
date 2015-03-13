@@ -80,7 +80,7 @@ return array(
 	|
 	*/
 
-	'username' => "demo.smtp.qhonline@gmail.com",
+	'username' => "quan.li2609@gmail.com",
 
 	/*
 	|--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ return array(
 	|
 	*/
 
-	'password' => "demoABC123",
+	'password' => "minhquan",
 
 	/*
 	|--------------------------------------------------------------------------
