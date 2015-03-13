@@ -3,13 +3,13 @@
 <h1>{{$title}}</h1>
 <div class="avatar-profile">
 	@if($users->avatar == '')
-	<img src="{{asset('public/uploads/default.png')}}" alt="avatar default">
+	<img src="{{asset('public/images/avatar_default.svg')}}" alt="avatar default">
 	@else
 	<img width="171" src="{{asset($users->avatar)}}" alt="avatar default">
 	@endif
 
 	@if(Sentry::check() && Sentry::getUser()->id == $users->id | Sentry::getUser()->hasAccess("admin"))
-	<div class="edit-avatar"><a href="{{URL::route('profile_get_upload', array($users->id))}}"><span style="color:#CCC" class="glyphicon glyphicon-camera" aria-hidden="true"></span></a></div>
+	<div class="edit-avatar"><a href="{{URL::route('profile_get_upload', array($users->id))}}"><span style="color:#FFF" class="glyphicon glyphicon-camera" aria-hidden="true"></span></a></div>
 	@endif
 </div>
 <div class="status-user">
@@ -29,7 +29,6 @@
 		<li>Tên truy cập :</li>
 		<li>Họ tên :</li>
 		<li>Email :</li>
-		<li>Level :</li>
 		<li>Trạng thái :</li>
 		<li>Lần đăng nhập cuối cùng :</li>
 	</ul>
@@ -51,10 +50,6 @@
 		<li id="view_name">{{$users->last_name." ".$users->first_name}} </li>
 		@endif
 		<li>{{$users->email}}</li>
-		<li>@foreach($users->getGroups() as $u)
-				{{$u->name}}
-			@endforeach()
-		</li>
 		@if($users->activated == 1)
 		<li>Đã kích hoạt</li>
 		@else

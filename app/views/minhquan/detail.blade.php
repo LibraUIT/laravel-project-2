@@ -98,13 +98,9 @@
 						@if($answer->correct == "1")		
 							<div class="bestanswer"> <span style="color:#04B486"   class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> Câu trả lời đúng nhất</div>
 						@else
-						<?php
-							$admin = Sentry::findGroupByName('Administrator');
-							$mod = Sentry::findGroupByName('Moderator');
-						?>
 
 							@if(Sentry::check())
-								@if($question->userID == Sentry::getUser()->id || Sentry::getUser()->inGroup($mod) || Sentry::getUser()->inGroup($admin))
+								@if($question->userID == Sentry::getUser()->id || Sentry::getUser()->hasAccess("admin"))
 									<a class="chooseme" href="{{URL::route("answer_correct_get",array($answer->id))}}"><div style="color:red" class="choosebestanswer "><span style="color:red"   class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>  Đúng</div></a>
 								@endif
 							@endif

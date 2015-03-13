@@ -55,7 +55,7 @@ class CategorieController extends BaseController{
 				return "OK";
 			}else
 			{
-				return Response::Json(array("status"=>"error","mess"=>"Chủ đề này không tồn tại"));
+				return Response::Json(array("status"=>"error","mess"=>"Chủ đề này đã tồn tại"));
 			}
 		}
 	}

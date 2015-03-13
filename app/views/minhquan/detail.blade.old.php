@@ -96,13 +96,8 @@
 						@if($answer->correct == "1")		
 							<div class="bestanswer"> <span style="color:green"   class="glyphicon glyphicon-ok" aria-hidden="true"></span> Best Answer</div>
 						@else
-
-						<?php
-							$admin = Sentry::findGroupByName('Administrator');
-							$mod = Sentry::findGroupByName('Moderator');
-						?>
 							@if(Sentry::check())
-								@if($question->userID == Sentry::getUser()->id || Sentry::getUser()->inGroup($mod))
+								@if($question->userID == Sentry::getUser()->id || Sentry::getUser()->hasAccess("admin"))
 									<a class="chooseme" href="{{URL::route("answer_correct_get",array($answer->id))}}"><div style="color:red" class="choosebestanswer ">  Correct ?</div></a>
 								@endif
 							@endif

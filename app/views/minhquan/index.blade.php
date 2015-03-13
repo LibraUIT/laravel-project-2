@@ -19,16 +19,6 @@
   <button class="btn btn-primary btn-search-submit">Tìm kiếm</button>
 </div>
 <h1>{{$title}}</h1>
-
-<div id="index-line">
-	<ul id="tab-line">
-		<li><a href="{{Request::url()}}?tab=active">Mới nhất</a></li>
-		<li><a href="{{Request::url();}}?tab=hot">Nổi bật</a></li>
-		<li><a href="{{Request::url();}}?tab=week">Tuần</a></li>
-		<li><a href="{{Request::url();}}?tab=month">Tháng</a></li>
-	</ul>
-</div>
-
 @if(isset($userid))
 <a class="profile_link" href="{{URL::route('profile_get', array($userid))}}">Xem trang cá nhân</a>
 @endif
@@ -116,65 +106,6 @@ $(document).ready(function(){
 			});
 	});
 });
-	var task = "active";
-	var currentPageUrl = "";
-    if (typeof this.href === "undefined") {
-        currentPageUrl = document.location.toString().toLowerCase();
-    }
-    else {
-        currentPageUrl = this.href.toString().toLowerCase();
-    }
-    var params = currentPageUrl.split('?');
-    getparam = params[1];
-    console.log(getparam);
-    if(getparam != undefined)
-    {
-	    getparam = getparam.split('=');
-	    if(getparam[0] == 'tab')
-	    {
-	    	task = getparam[1];
-	    }else{
-	    	task = getparam[2];
-	    }
-	}
-    if(task == undefined)
-	{
-		task = "active";
-	}
-    switch(task)
-    {
-    	case "active":
-    		cssCurentTab(1);
-    		break;
-    	case "hot":
-    		cssCurentTab(2);
-    		break;
-    	case "week":
-    		cssCurentTab(3);
-    		break;
-    	case "month":
-    		cssCurentTab(4);
-    		break;		
-    	default:
-    		cssCurentTab(1);
-    		break;
-    }
- function cssCurentTab($num)
- {
- 			$("#tab-line li:nth-child("+$num+")").css({"border-left" : "1px solid #CCC",	
-			"border-right" : "1px solid #CCC",
-			"border-top" : "3px solid #333",
-			"border-bottom" : "1px solid #FFF"});
-			$("#tab-line li:nth-child("+$num+")").find('a').css({"color" : "#333"});
- }
-
-$('.pagination li').each(function(){
-	url = $(this).find('a').attr('href');
-	newurl = url+'&tab='+task;
-	$(this).find('a').removeAttr('href');
-	$(this).find('a').attr('href', newurl);
-});  
-
 </script>
 <style type="text/css">
 	
@@ -191,39 +122,6 @@ $('.pagination li').each(function(){
 	}
 	.search-danger::-ms-input-placeholder { /* Internet Explorer 10+ */
 	   color:    #F78181;
-	}
-	#index-line{
-		width: 98%;
-		margin-left: 1%;
-		height: 40px;
-		border-bottom:  1px solid #CCC;
-		margin-bottom: 10px;
-	}
-	#tab-line li
-	{
-		width: 80px;
-		/*border-left: 1px solid #CCC;
-		border-right: 1px solid #CCC;			
-		border-top: 3px solid #333;*/
-		text-align: center;
-		height:40px;
-		padding-top: 10px;
-		float: left;
-	}
-	#tab-line li a
-	{
-		color: #999;
-	}
-	#tab-line li a:hover
-	{
-		text-decoration: none;
-	}
-	#tab-line li:hover
-	{
-		border-left: 1px solid #CCC;
-		border-right: 1px solid #CCC;			
-		border-top: 3px solid #333;
-		border-bottom: 1px solid #FFF;
-	}
+	}  
 </style>
 @stop

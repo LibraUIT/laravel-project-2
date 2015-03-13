@@ -21,9 +21,6 @@ class AuthController extends BaseController{
 			}catch(Cartalyst\Sentry\Users\UserNotFoundException $e)
 			{
 				return Redirect::route('index')->with("error", "Không tồn tại tên truy cập này");
-			}catch(Cartalyst\Sentry\Users\UserNotActivatedException $e)
-			{
-				return Redirect::route('index')->with("error", "Tài khoản này chưa được kích hoạt");
 			}
 		}else
 		{
@@ -57,8 +54,6 @@ class AuthController extends BaseController{
 					"email" => Input::get('email'),
 					"password" => Input::get('password'),
 					"activated" => 1,
-					"status" => 1,
-					'avatar' => "uploads/default.png",
 				);
 			$dataLogin = array(
 					"username" => Input::get('username'),
@@ -66,9 +61,6 @@ class AuthController extends BaseController{
 				);
 			Sentry::getUserProvider()->create($dataInsert);
 			Sentry::Authenticate($dataLogin, false);
-			$memberGroup = Sentry::findGroupById(2);
-			$userCurrent = Sentry::getUser();
-			$userCurrent->addGroup($memberGroup);
 			return Redirect::route("index")->with("success", "Chúc mừng bạn đã đăng kí thành viên thành công");
 		}else
 		{
@@ -122,7 +114,7 @@ class AuthController extends BaseController{
 
 					);
 				Mail::send("mail.activecode",$dataEmail,function($mess) use ($dataEmail){
-					$mess->from("quan.li2609@gmail.com","No-reply Email");
+					$mess->from("demo.smtp.qhonline@gmail.com","No-reply Email");
 					$mess->to($dataEmail["email"],$dataEmail["name"]);
 					$mess->subject("Yeu cau lay lai mat khau");
 				});
@@ -152,7 +144,7 @@ class AuthController extends BaseController{
 						"pass" => $newpass
 					);
 				Mail::send("mail.resetpass",$dataEmail,function($mess) use ($dataEmail){
-					$mess->from("quan.li2609@gmail.com","No-reply Email");
+					$mess->from("demo.smtp.qhonline@gmail.com","No-reply Email");
 					$mess->to($dataEmail["email"],$dataEmail['name']);
 					$mess->subject("Mat khau moi cua ban tren qhonline.edu.vn");
 				});
@@ -295,55 +287,5 @@ class AuthController extends BaseController{
 			return Redirect::route("index")->with("error", "Bạn không có quyền thực hiện chức năng này");
 		}
 
-	}
-	public function getGroup()
-	{
-		$groups = Group::all();
-		return View::make('minhquan.group')->with('title', 'Quản lý group')->with('groups', $groups);
-	}
-	public function postCreateGroup()
-	{
-		$valid = Validator::make(Input::all(), Group::$create_rules, Group::$group_langs);
-		if($valid->passes())
-		{
-			try
-			{
-			    // Create the group
-			    $group = Sentry::createGroup(array(
-			        'name'        => Input::get('add_group_name'),
-			        'permissions' => array(
-			            Input::get('add_group_permission') => 1,
-			        ),
-			    ));
-			    return Redirect::route('get_group')->with('success', 'Thêm group thành công');
-			}
-			catch (Cartalyst\Sentry\Groups\NameRequiredException $e)
-			{
-			    return Redirect::route('get_group', array(Input::get('add_group_name'), Input::get('add_group_permission')))->with('error', 'Tên không được để trống');
-			}
-			catch (Cartalyst\Sentry\Groups\GroupExistsException $e)
-			{
-			    return Redirect::route('get_group', array(Input::get('add_group_name'), Input::get('add_group_permission')))->with('error', 'Group đã tồn tại');
-			}
-
-		}else
-		{
-			return Redirect::route('get_group', array(Input::get('add_group_name'), Input::get('add_group_permission')))->with('error', $valid->errors()->first());
-		}
-	}
-	public function postDeleteGroup($id)
-	{
-		if(Request::ajax())
-		{
-			$group = Group::find($id);
-			if($group)
-			{
-				$group->delete();
-				return "OK";
-			}else
-			{
-				return Response::Json(array("status"=>"error","mess"=>"Group này không tồn tại"));
-			}
-		}
 	}
 }

@@ -14,9 +14,5 @@
 </div>
 </div>
 @section("data_code")
-	<style type="text/css">
-	
-	</style>
+
 @stop
-
-
