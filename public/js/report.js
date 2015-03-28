@@ -5,7 +5,7 @@ $(function () {
 		$("#title-report-input").hide();
 		var i = 0;
 		$(".box-one").mouseenter(function(){
-			if(i==0)
+			if(i % 2 ==0)
 			{
 				$( ".tree-chart" ).animate({ "left": "80px" }, "slow" );
 				$( ".tree-chart" ).show("slow");
@@ -15,7 +15,7 @@ $(function () {
 		$(".box").mouseleave(function(){
 			$( ".tree-chart" ).hide("fast");
 			$( ".tree-chart" ).animate({ "left": "0px" }, "fast" );	
-			i=0;
+			i++;
 		});
 		$("#show-input-report-title").on("click", function(){
 			$("#title-report-input").show();
@@ -534,6 +534,8 @@ function applyLayout()
 	container = document.querySelector('.packery');
   	pckry = new Packery(container);
 	pckry.layout();
+	// Scroll bottom when add chart
+	$(document).scrollTop($(document).height());
 }
 function drawChart(type)
 {

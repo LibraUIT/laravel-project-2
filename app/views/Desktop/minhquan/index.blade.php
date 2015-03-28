@@ -126,7 +126,6 @@ $(document).ready(function(){
     }
     var params = currentPageUrl.split('?');
     getparam = params[1];
-    console.log(getparam);
     if(getparam != undefined)
     {
 	    getparam = getparam.split('=');

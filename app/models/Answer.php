@@ -14,7 +14,7 @@ class Answer extends Eloquent{
 		);
 	public static $answer_langs = array(
 			"answer.required" => "Vui lòng nhập vào câu trả lời của bạn",
-			"answer.min" => "Vui lòng nhập vào câu trả lời có ít nhất :min ky tu"
+			"answer.min" => "Vui lòng nhập vào câu trả lời có ít nhất :min ký tự"
 		);
 	public function getTimeagoAttribute(){
 		$date=\Carbon\Carbon::createFromTimeStamp(strtotime($this->created_at))->diffForHumans();

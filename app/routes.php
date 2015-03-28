@@ -329,6 +329,7 @@ Route::get('testsql', function(){
 });
 
 Route::get('test', function(){
-	return Device::make();
+	
+	return date("d-m-Y",strtotime(" 28/01/2014 00:09:49 "));
 });
 

@@ -8,22 +8,29 @@ class MainController extends BaseController
 		$day = date('D', strtotime( $today));
 		$week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 		$pos = array_search ($day,$week);
-		$firstday = date('Y-m-d H:i:s', strtotime("-$pos day"));
-		$lastday = date('Y-m-d H:i:s');
+		if($day == "Mon")
+			{
+				$firstday = date('Y-m-d');
+				$firstday = date('Y-m-d', strtotime($firstday." 00:00:00"));
+				$lastday = date('Y-m-d H:i:s');
+			}else{
+				$firstday = date('Y-m-d', strtotime("-$pos day"));	
+				$lastday = date('Y-m-d H:i:s');
+			}
 		if(isset($_GET['tab']))
 		{
 			switch ($_GET['tab']) {
 				case "active":
-					$question=Question::with("tags","users", "answers")->orderBy("id","desc")->paginate(9);
+					$question=Question::with("tags","users", "answers")->orderBy("id","desc")->paginate(20);
 					break;
 				case 'hot':
-					$question=Question::with("tags","users", "answers")->orderBy("viewed","desc")->paginate(9);
+					$question=Question::with("tags","users", "answers")->orderBy("viewed","desc")->paginate(20);
 					break;
 				case 'week':
 					$question=Question::with("tags","users", "answers")
 					->where("created_at" , "<=", $lastday)
 					->where("created_at", ">=", $firstday)
-					->orderBy("id","desc")->paginate(9);
+					->orderBy("id","desc")->paginate(20);
 					break;
 				case "month":
 					$today = date("d")-1;
@@ -31,15 +38,15 @@ class MainController extends BaseController
 					$question=Question::with("tags","users", "answers")
 					->where("created_at" , "<=", $lastday)
 					->where("created_at", ">=", $firstday)
-					->orderBy("id","desc")->paginate(9);
+					->orderBy("id","desc")->paginate(20);
 					break;
 				default;
-					$question=Question::with("tags","users", "answers")->orderBy("id","desc")->paginate(9);
+					$question=Question::with("tags","users", "answers")->orderBy("id","desc")->paginate(20);
 					break;
 			}
 			
 		}else{
-			$question=Question::with("tags","users", "answers")->orderBy("id","desc")->paginate(9);
+			$question=Question::with("tags","users", "answers")->orderBy("id","desc")->paginate(20);
 		}
 		return View::make(Device::make().".minhquan.index")->with("title",$title)->with("questions",$question);
 	}
@@ -62,8 +69,15 @@ class MainController extends BaseController
 		$day = date('D', strtotime( $today));
 		$week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 		$pos = array_search ($day,$week);
-		$firstday = date('Y-m-d H:i:s', strtotime("-$pos day"));
-		$lastday = date('Y-m-d H:i:s');
+		if($day == "Mon")
+			{
+				$firstday = date('Y-m-d');
+				$firstday = date('Y-m-d', strtotime($firstday." 00:00:00"));
+				$lastday = date('Y-m-d H:i:s');
+			}else{
+				$firstday = date('Y-m-d', strtotime("-$pos day"));	
+				$lastday = date('Y-m-d H:i:s');
+			}
 		if($cate == 0)
 		{
 			if(isset($_GET['tab']))
@@ -73,13 +87,13 @@ class MainController extends BaseController
 							$question = Question::with("tags","users", "answers")
 							->where("title", "like", "%".$text."%")
 							->orWhere("content", "like", "%".$text."%")
-							->orderBy("id","desc")->paginate(9);
+							->orderBy("id","desc")->paginate(20);
 						break;
 					case "hot":
 							$question = Question::with("tags","users", "answers")
 							->where("title", "like", "%".$text."%")
 							->orWhere("content", "like", "%".$text."%")
-							->orderBy("viewed","desc")->paginate(9);
+							->orderBy("viewed","desc")->paginate(20);
 						break;
 					case "week":
 							$question = Question::with("tags","users", "answers")
@@ -89,7 +103,7 @@ class MainController extends BaseController
 							->orWhere("content", "like", "%".$text."%")	
 							->where("created_at" , "<=", $lastday)
 							->where("created_at", ">=", $firstday)
-							->orderBy("id","desc")->paginate(9);
+							->orderBy("id","desc")->paginate(20);
 						break;
 					case "month":
 							$today = date("d")-1;
@@ -101,13 +115,13 @@ class MainController extends BaseController
 							->orWhere("content", "like", "%".$text."%")
 							->where("created_at" , "<=", $lastday)
 							->where("created_at", ">=", $firstday)
-							->orderBy("id","desc")->paginate(9);
+							->orderBy("id","desc")->paginate(20);
 						break;		
 					default:
 							$question = Question::with("tags","users", "answers")
 							->where("title", "like", "%".$text."%")
 							->orWhere("content", "like", "%".$text."%")
-							->orderBy("id","desc")->paginate(9);
+							->orderBy("id","desc")->paginate(20);
 						break;
 				}
 			}else
@@ -128,14 +142,14 @@ class MainController extends BaseController
 							->where("categorieID", $cate)
 							->where("title", "like", "%".$text."%")
 							->orWhere("content", "like", "%".$text."%")
-							->orderBy("id","desc")->paginate(9);
+							->orderBy("id","desc")->paginate(20);
 						break;
 					case "hot":
 							$question = Question::with("tags","users", "answers", "categories")
 							->where("categorieID", $cate)
 							->where("title", "like", "%".$text."%")
 							->orWhere("content", "like", "%".$text."%")
-							->orderBy("viewed","desc")->paginate(9);
+							->orderBy("viewed","desc")->paginate(20);
 						break;
 					case "week":
 							$question = Question::with("tags","users", "answers", "categories")
@@ -146,7 +160,7 @@ class MainController extends BaseController
 							->orWhere("content", "like", "%".$text."%")
 							->where("created_at" , "<=", $lastday)
 							->where("created_at", ">=", $firstday)
-							->orderBy("id","desc")->paginate(9);
+							->orderBy("id","desc")->paginate(20);
 						break;
 					case "month":
 							$today = date("d")-1;
@@ -159,14 +173,14 @@ class MainController extends BaseController
 							->orWhere("content", "like", "%".$text."%")
 							->where("created_at" , "<=", $lastday)
 							->where("created_at", ">=", $firstday)
-							->orderBy("id","desc")->paginate(9);
+							->orderBy("id","desc")->paginate(20);
 						break;		
 					default:
 							$question = Question::with("tags","users", "answers", "categories")
 							->where("categorieID", $cate)
 							->where("title", "like", "%".$text."%")
 							->orWhere("content", "like", "%".$text."%")
-							->orderBy("id","desc")->paginate(9);
+							->orderBy("id","desc")->paginate(20);
 						break;
 				}
 			}else
@@ -175,7 +189,7 @@ class MainController extends BaseController
 						->where("categorieID", $cate)
 						->where("title", "like", "%".$text."%")
 						->orWhere("content", "like", "%".$text."%")
-						->orderBy("id","desc")->paginate(9);
+						->orderBy("id","desc")->paginate(20);
 			}			
 			$cat = Categorie::find($cate);				
 			$title="Kết quả tìm kiếm : chủ đề ".$cat->title." cho từ khoá \"".$text.'"';

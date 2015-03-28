@@ -21,9 +21,7 @@
 		@include("Desktop.template.menu")
 	</div>
 </div>
-<div class="bottom">
-	Copy &copy; 2014 - Quan Nguyen
-</div>
+@include("Desktop.template.bottom")
 	{{HTML::script('public/js/jquery-1.9.1.min.js')}}
 	{{HTML::script('public/js/bootstrap.js')}}
 	{{HTML::script('public/js/jquery.Jcrop.js')}}

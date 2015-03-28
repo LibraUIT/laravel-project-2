@@ -84,7 +84,7 @@ class QuestionController extends BaseController{
 				$question->save();
 				Cache::add($ip."_view_".$id, $view, 15);
 			}
-			$answer = Answer::with("users")->where("questionID", $id)->orderBy("correct", "desc")->get();
+			$answer = Answer::with("users")->where("questionID", $id)->orderBy("correct", "desc")->paginate(10);;
 			return View::make(Device::make().".minhquan.detail")->with("title",$question->title)->with("question",$question)->with("answers", $answer);
 		}else{
 			return Redirect::route("index")->with("error","Câu hỏi không tồn tại");
@@ -109,22 +109,29 @@ class QuestionController extends BaseController{
 			$day = date('D', strtotime( $today));
 			$week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 			$pos = array_search ($day,$week);
-			$firstday = date('Y-m-d H:i:s', strtotime("-$pos day"));
-			$lastday = date('Y-m-d H:i:s');
+			if($day == "Mon")
+			{
+				$firstday = date('Y-m-d');
+				$firstday = date('Y-m-d', strtotime($firstday." 00:00:00"));
+				$lastday = date('Y-m-d H:i:s');
+			}else{
+				$firstday = date('Y-m-d', strtotime("-$pos day"));	
+				$lastday = date('Y-m-d H:i:s');
+			}
 				if(isset($_GET['tab']))
 				{
 					switch ($_GET['tab']) {
 					case "active":
-						$questions=$cate->questions()->with("users", "tags", "answers")->orderBy("id","desc")->paginate(9);
+						$questions=$cate->questions()->with("users", "tags", "answers")->orderBy("id","desc")->paginate(20);
 						break;
 					case 'hot':
-						$questions=$cate->questions()->with("users", "tags", "answers")->orderBy("viewed","desc")->paginate(9);
+						$questions=$cate->questions()->with("users", "tags", "answers")->orderBy("viewed","desc")->paginate(20);
 						break;
 					case 'week':
 						$questions=$cate->questions()->with("users", "tags", "answers")
 						->where("questions.created_at" , "<=", $lastday)
 						->where("questions.created_at", ">=", $firstday)
-						->orderBy("id","desc")->paginate(9);
+						->orderBy("id","desc")->paginate(20);
 						break;
 					case "month":
 						$today = date("d")-1;
@@ -132,15 +139,15 @@ class QuestionController extends BaseController{
 						$questions=$cate->questions()->with("users", "tags", "answers")
 						->where("questions.created_at" , "<=", $lastday)
 						->where("questions.created_at", ">=", $firstday)
-						->orderBy("id","desc")->paginate(9);
+						->orderBy("id","desc")->paginate(20);
 						break;
 					default;
-						$questions=$cate->questions()->with("users", "tags", "answers")->orderBy("id","desc")->paginate(9);
+						$questions=$cate->questions()->with("users", "tags", "answers")->orderBy("id","desc")->paginate(20);
 						break;
 				}
 			}else
 			{
-				$questions=$cate->questions()->with("users", "tags", "answers")->orderBy("id","desc")->paginate(9);
+				$questions=$cate->questions()->with("users", "tags", "answers")->orderBy("id","desc")->paginate(20);
 			}
 			return View::make(Device::make().".minhquan.index")->with("title", "Các câu hỏi thuộc chủ đề : $cate->title")->with("questions", $questions);
 		}else
@@ -157,22 +164,29 @@ class QuestionController extends BaseController{
 			$day = date('D', strtotime( $today));
 			$week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 			$pos = array_search ($day,$week);
-			$firstday = date('Y-m-d H:i:s', strtotime("-$pos day"));
-			$lastday = date('Y-m-d H:i:s');
+			if($day == "Mon")
+			{
+				$firstday = date('Y-m-d');
+				$firstday = date('Y-m-d', strtotime($firstday." 00:00:00"));
+				$lastday = date('Y-m-d H:i:s');
+			}else{
+				$firstday = date('Y-m-d', strtotime("-$pos day"));	
+				$lastday = date('Y-m-d H:i:s');
+			}
 				if(isset($_GET['tab']))
 				{
 					switch ($_GET['tab']) {
 					case "active":
-						$questions = $tags->questions()->with("users", "tags", "answers")->orderBy("id", "desc")->paginate(9);
+						$questions = $tags->questions()->with("users", "tags", "answers")->orderBy("id", "desc")->paginate(20);
 						break;
 					case 'hot':
-						$questions = $tags->questions()->with("users", "tags", "answers")->orderBy("viewed", "desc")->paginate(9);
+						$questions = $tags->questions()->with("users", "tags", "answers")->orderBy("viewed", "desc")->paginate(20);
 						break;
 					case 'week':
 						$questions = $tags->questions()->with("users", "tags", "answers")
 						->where("questions.created_at" , "<=", $lastday)
 						->where("questions.created_at", ">=", $firstday)
-						->orderBy("id","desc")->paginate(9);
+						->orderBy("id","desc")->paginate(20);
 						break;
 					case "month":
 						$today = date("d")-1;
@@ -180,15 +194,15 @@ class QuestionController extends BaseController{
 						$questions = $tags->questions()->with("users", "tags", "answers")
 						->where("questions.created_at" , "<=", $lastday)
 						->where("questions.created_at", ">=", $firstday)
-						->orderBy("id","desc")->paginate(9);
+						->orderBy("id","desc")->paginate(20);
 						break;
 					default;
- 						$questions = $tags->questions()->with("users", "tags", "answers")->orderBy("id", "desc")->paginate(9);
+ 						$questions = $tags->questions()->with("users", "tags", "answers")->orderBy("id", "desc")->paginate(20);
 						break;
 					}
 				}else
 				{
-					$questions = $tags->questions()->with("users", "tags", "answers")->orderBy("id", "desc")->paginate(9);
+					$questions = $tags->questions()->with("users", "tags", "answers")->orderBy("id", "desc")->paginate(20);
 				}
 			return View::make(Device::make().".minhquan.index")->with("title", "Các câu hỏi theo từ khoá: $tags->tag")->with("questions", $questions);
 		}else
@@ -205,23 +219,30 @@ class QuestionController extends BaseController{
 			$day = date('D', strtotime( $today));
 			$week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 			$pos = array_search ($day,$week);
-			$firstday = date('Y-m-d H:i:s', strtotime("-$pos day"));
-			$lastday = date('Y-m-d H:i:s');
+			if($day == "Mon")
+			{
+				$firstday = date('Y-m-d');
+				$firstday = date('Y-m-d', strtotime($firstday." 00:00:00"));
+				$lastday = date('Y-m-d H:i:s');
+			}else{
+				$firstday = date('Y-m-d', strtotime("-$pos day"));	
+				$lastday = date('Y-m-d H:i:s');
+			}
 			if(isset($_GET['tab']))
 			{
 				switch ($_GET['tab']) {
 					case "active":
-						$questions = $user->questions()->with("users", "answers", "tags")->orderBy("id", "desc")->paginate(9);
+						$questions = $user->questions()->with("users", "answers", "tags")->orderBy("id", "desc")->paginate(20);
 						break;
 					case 'hot':
-						$questions = $user->questions()->with("users", "answers", "tags")->orderBy("viewed", "desc")->paginate(9);
+						$questions = $user->questions()->with("users", "answers", "tags")->orderBy("viewed", "desc")->paginate(20);
 
 						break;
 					case 'week':
 						$questions = $user->questions()->with("users", "answers", "tags")
 						->where("questions.created_at" , "<=", $lastday)
 						->where("questions.created_at", ">=", $firstday)
-						->orderBy("id","desc")->paginate(9);
+						->orderBy("id","desc")->paginate(20);
 						break;
 					case "month":
 						$today = date("d")-1;
@@ -229,15 +250,15 @@ class QuestionController extends BaseController{
 						$questions = $user->questions()->with("users", "answers", "tags")
 						->where("questions.created_at" , "<=", $lastday)
 						->where("questions.created_at", ">=", $firstday)
-						->orderBy("id","desc")->paginate(9);
+						->orderBy("id","desc")->paginate(20);
 						break;
 					default;
- 						$questions = $tags->questions()->with("users", "tags", "answers")->orderBy("id", "desc")->paginate(9);
+ 						$questions = $tags->questions()->with("users", "tags", "answers")->orderBy("id", "desc")->paginate(20);
 						break;
 					}
 			}else
 			{
-				$questions = $user->questions()->with("users", "answers", "tags")->orderBy("id", "desc")->paginate(9);
+				$questions = $user->questions()->with("users", "answers", "tags")->orderBy("id", "desc")->paginate(20);
 			}	
 			$userid = $user->id;
 			return View::make(Device::make().".minhquan.index")->with("title", "Các câu hỏi của thành viên : $user->username")->with("questions", $questions)->with('userid', $userid);
@@ -252,19 +273,19 @@ class QuestionController extends BaseController{
 			{
 				switch ($_GET['tab']) {
 					case "active":
-						$question = Question::with("users", "answers", "tags")->where("created_at", ">=", new DateTime('today'))->orderBy("id", "desc")->paginate(9);
+						$question = Question::with("users", "answers", "tags")->where("created_at", ">=", new DateTime('today'))->orderBy("id", "desc")->paginate(20);
 						break;
 					case 'hot':
-						$question = Question::with("users", "answers", "tags")->where("created_at", ">=", new DateTime('today'))->orderBy("viewed", "desc")->paginate(9);
+						$question = Question::with("users", "answers", "tags")->where("created_at", ">=", new DateTime('today'))->orderBy("viewed", "desc")->paginate(20);
 
 						break;
 					default;
- 						$question = Question::with("users", "answers", "tags")->where("created_at", ">=", new DateTime('today'))->orderBy("id", "desc")->paginate(9);
+ 						$question = Question::with("users", "answers", "tags")->where("created_at", ">=", new DateTime('today'))->orderBy("id", "desc")->paginate(20);
 						break;
 					}
 			}else
 			{
-				$question = Question::with("users", "answers", "tags")->where("created_at", ">=", new DateTime('today'))->orderBy("id", "desc")->paginate(9);
+				$question = Question::with("users", "answers", "tags")->where("created_at", ">=", new DateTime('today'))->orderBy("id", "desc")->paginate(20);
 		}	
 		if(count($question) > 0){
 			return View::make(Device::make().".minhquan.index")->with("title", "Các câu hỏi trong 24 giờ qua")->with("questions", $question);
@@ -284,7 +305,7 @@ class QuestionController extends BaseController{
 			$question = $cate->questions()->with("users", "answers", "tags")
 								->where("created_at" , "<", $date2)
 								->where("created_at", ">=", $date1)
-								->orderBy("id", "desc")->paginate(9);
+								->orderBy("id", "desc")->paginate(20);
 			if(count($question) > 0){
 				return View::make(Device::make().".minhquan.index")->with("title", "Các câu hỏi ".$cate->title." ngày ".$day."-".$month."-".$year)->with("questions", $question);
 			}else
@@ -308,14 +329,14 @@ class QuestionController extends BaseController{
 					$question = $cate->questions()->with("users", "answers", "tags")
 										->where("created_at" , "<=", $date2)
 										->where("created_at", ">=", $date1)
-										->orderBy("id", "desc")->paginate(9);
+										->orderBy("id", "desc")->paginate(20);
 			}else
 			{
 				$date3 = date('Y-m-d H:i:s',strtotime($to."+1 days"));
 				$question = $cate->questions()->with("users", "answers", "tags")
 										->where("created_at" , "<", $date3)
 										->where("created_at", ">=", $date1)
-										->orderBy("id", "desc")->paginate(9);
+										->orderBy("id", "desc")->paginate(20);
 			}
 
 			if(count($question) > 0){

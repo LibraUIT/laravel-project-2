@@ -127,7 +127,6 @@ for(s = 0; s < sqlChart.length; s++)
 	ynextDay = nextDay.getFullYear();
 	nextDate = months[mnextDay] + " " + dnextDay + " , " + ynextDay;
 	get_date_to = nextDate;
-	console.log(nextDate);
 	if(chart_type == "chart6")
 	{
 		crId = idChart;

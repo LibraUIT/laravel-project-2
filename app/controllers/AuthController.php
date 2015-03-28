@@ -121,7 +121,7 @@ class AuthController extends BaseController{
 					"email" => $user->email,
 
 					);
-				Mail::send("mail.activecode",$dataEmail,function($mess) use ($dataEmail){
+				Mail::send(Device::make().".mail.activecode",$dataEmail,function($mess) use ($dataEmail){
 					$mess->from("quan.li2609@gmail.com","No-reply Email");
 					$mess->to($dataEmail["email"],$dataEmail["name"]);
 					$mess->subject("Yeu cau lay lai mat khau");
@@ -151,7 +151,7 @@ class AuthController extends BaseController{
 						"email" => $user->email,
 						"pass" => $newpass
 					);
-				Mail::send("mail.resetpass",$dataEmail,function($mess) use ($dataEmail){
+				Mail::send(Device::make().".mail.resetpass",$dataEmail,function($mess) use ($dataEmail){
 					$mess->from("quan.li2609@gmail.com","No-reply Email");
 					$mess->to($dataEmail["email"],$dataEmail['name']);
 					$mess->subject("Mat khau moi cua ban tren qhonline.edu.vn");

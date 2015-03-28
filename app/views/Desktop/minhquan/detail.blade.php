@@ -1,6 +1,6 @@
 @extends("Desktop.master")
 @section('content')
-<h1 id="replyh">{{$title}}</h1>
+<h4 id="replyh">{{$title}}</h4>
 @if(Session::has("success"))
 <div class="alert alert-success answer-success">
 <h4>{{Session::get('success')}}</h4>
@@ -45,17 +45,17 @@
 		}
 		?>
 		@if($isOK == true)
-		<div class="cntbox">
+		<!--<div class="cntbox">-->
 		@else
-		<div class="cntbox cntboxred">
+		<!--<div class="cntbox cntboxred">-->
 		@endif
-		<div class="cntcount">{{count($answers)}}</div>
+		<!--<div class="cntcount">{{count($answers)}}</div>
 		<div class="cnttext">Trả lời</div>
-	</div>
+	</div>-->
 </div>
 <div class="question-content-2"><p>{{$question->content}}</p></div>
 <div class="tag-info-1">
-	<h1>Từ khoá : </h1>
+	<h4>Từ khoá : </h4>
 	<ul class="tag-info">
 	@foreach($question->tags as $tag)
 	<li><a href="{{URL::route("question_tags_get",array($tag->alias))}}">{{$tag->tag}}</a></li>
@@ -66,11 +66,11 @@
 </div>
 
 <div class="question-reply">
-				<h1>Trả lời</h1>
+				<h4>{{count($answers)}} Trả lời</h4>
 				<div class="rrepol" id="replyarea" style="margin-bottom:10px">
 					{{Form::open(array("route"=>array("question_reply_post",$question->id,Unicode::make($question->title).".html")))}}
 						<div class="form-group">
-						{{Form::textarea("answer",Input::old("answer"),array('class'=>'form-control'))}}
+						{{Form::textarea("answer",Input::old("answer"),array('id'=>'answer','class'=>'form-control'))}}
 						</div>
 						<div class="form-group">
 						{{Form::submit("Gửi trả lời của bạn", array("class"=>"btn btn-primary"))}}
@@ -120,6 +120,7 @@
 						</div>
 					</div>
 					@endforeach	
+		{{$answers->links()}}			
 </div>
 @stop
 
@@ -151,9 +152,43 @@
 	})
 </script>
 @endif
+{{HTML::script('public/CK/ckeditor.js')}}
 <script type="text/javascript">
 		
 	$(document).ready(function(){
+		CKEDITOR.on('dialogDefinition', function (ev) {
+        // Take the dialog name and its definition from the event data.
+        var dialogName = ev.data.name;
+        var dialogDefinition = ev.data.definition;
+        // Check if the definition is from the dialog we're
+        // interested in (the 'image' dialog).
+        if (dialogName == 'image') {
+            // Get a reference to the 'Image Info' tab.
+            var infoTab = dialogDefinition.getContents('info');
+            // Remove unnecessary widgets/elements from the 'Image Info' tab.
+            infoTab.remove('browse');
+            infoTab.remove('txtHSpace');
+            infoTab.remove('txtVSpace');
+            infoTab.remove('txtBorder');
+            infoTab.remove('txtAlt');
+            infoTab.remove('txtWidth');
+            infoTab.remove('txtHeight');
+            infoTab.remove('htmlPreview');
+            infoTab.remove('cmbAlign');
+            infoTab.remove('ratioLock');
+        }
+    });
+		CKEDITOR.replace( 'answer',
+		{
+		    uiColor: '#e4edf4'
+		} );
+		CKEDITOR.config.toolbar = [
+		    ['-', 'NewPage', 'Preview', '-', 'Templates' ],
+		    [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ],
+		    [ 'Bold', 'Italic' ],
+		    ['Link'],
+		    ['Image']
+		];
 		$(".success").hide();
 		
 		$('.votebox a.like, .votebox a.dislike').on('click', function(event){
@@ -176,7 +211,7 @@
 			return confirm("Bạn có chắc chắn muốn xoá câu hỏi này không ?");
 		});
 		$reply = $('#replyarea');
-		$reply.hide();
+		//$reply.hide();
 		$('li.answer a').on('click', function(e){
 			e.preventDefault();
 			if($reply.is(":hidden"))
