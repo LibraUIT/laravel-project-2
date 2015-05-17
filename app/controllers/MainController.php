@@ -685,4 +685,33 @@ class MainController extends BaseController
 			return Redirect::route("index")->with("error","Tài liệu này không tồn tại");
 		}
 	}
+	public function getApiAllPdf()
+	{
+		$pdfs = Pdf::with('users')->orderBy('id', 'DESC')->get();
+		return Response::Json($pdfs);
+	}
+	public function deleteApiPdf()
+	{
+		$data = Input::get('data');
+		$data = explode(',', $data);
+		foreach ($data as $item) {
+			$pdf = Pdf::find($item);
+			if($pdf)
+			{
+				$pdf->delete();
+			}
+		}
+	}
+	public function getApiEditTitlePdf()
+	{
+		$id = Input::get('data');
+		$pdf = Pdf::find($id);
+		return $pdf->title;
+	}
+	public function getApiEditDataPdf()
+	{
+		$id = Input::get('data');
+		$pdf = Pdf::find($id);
+		return $pdf->data;
+	}
 }

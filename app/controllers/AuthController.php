@@ -346,4 +346,45 @@ class AuthController extends BaseController{
 			}
 		}
 	}
+	public function postApiLogin()
+	{
+		$valid = Validator::make(Input::all(), User::$login_rules, User::$user_langs);
+		if($valid->passes())
+		{
+			try{
+					$datalogin = array(
+							"username" => Input::get('username'),
+							"password" => Input::get('password'),
+						);
+					Sentry::Authenticate($datalogin, false);
+					$user = Sentry::findUserByCredentials($datalogin);
+					$user->status=1;
+					$user->save();
+					//return Redirect::route('index')->with("success", "Đăng nhập thành công");
+					return Response::Json(array('status'=>'success', 'data' => $user));
+			}catch(Cartalyst\Sentry\Users\WrongPasswordException $e)
+			{
+				//return Redirect::route('index')->with("error", "Mật khẩu không chính xác");
+				return Response::Json(array('status' => 'error', 'mess' => 'Password not match .'));
+			}catch(Cartalyst\Sentry\Users\UserNotFoundException $e)
+			{
+				//return Redirect::route('index')->with("error", "Không tồn tại tên truy cập này");
+				return Response::Json(array('status'=>'error', 'mess'=>'User not exits .'));
+			}catch(Cartalyst\Sentry\Users\UserNotActivatedException $e)
+			{
+				//return Redirect::route('index')->with("error", "Tài khoản này chưa được kích hoạt");
+				return Response::Json(array('status'=>'error', 'mess'=>'User not active, please contact with Administrator .'));
+			}
+		}else
+		{
+			//return Redirect::route("index")->with('error', $valid->errors()->first());
+			return Response::Json(array('status'=>'error', 'mess'=> $valid->errors()->first()));
+		}
+	}
+	public function postApiUser()
+	{
+		$id = Input::get('id');
+		$user = User::find($id);
+		return Response::Json($user);
+	}
 }

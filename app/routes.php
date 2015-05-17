@@ -333,3 +333,17 @@ Route::get('test', function(){
 	return date("d-m-Y",strtotime(" 28/01/2014 00:09:49 "));
 });
 
+//Api For admin page
+Route::get('api/categorie_list', array("api_categorie_index_get", "uses"=>"CategorieController@getApiIndex"));
+Route::post("api/categorie_delete", array("as"=>"api_categorie_delete_post", "uses" => "CategorieController@postApiDelete"));
+Route::post("api/categorie_create", array("as"=>"api_categorie_create_post", "uses" => "CategorieController@postApiCreate"));
+Route::post("api/categorie_edit", array("as"=>"api_categorie_edit_post", "uses" => "CategorieController@postApiEdit"));
+Route::post("api/categorie_act_edit", array("as"=>"api_categorie_act_edit_post", "uses" => "CategorieController@postApiActEdit"));
+Route::get('api/report_list', array("api_report_index_get", "uses"=>"MainController@getApiAllPdf"));
+Route::post("api/report_delete", array("as"=>"api_report_delete_post", "uses" => "MainController@deleteApiPdf"));
+Route::post('api/report_edit_title', array('as' => 'api_report_edit_title', 'uses'=>'MainController@getApiEditTitlePdf'));
+Route::post('api/report_edit_data', array('as' => 'api_report_edit_data', 'uses'=>'MainController@getApiEditDataPdf'));
+Route::post("api/login", array("as"=>"api_login_post", "uses" => "AuthController@postApiLogin"));
+Route::post("api/user", array("as"=>"api_user_post", "uses" => "AuthController@postApiUser"));
+Route::get("api/server", array("as"=>"api_server_get", "uses" => "HomeController@getApiServer"));
+
