@@ -12,11 +12,23 @@ var configApiUrlPath = 'http://localhost/lar4/api';
 var configReportUrlPath = 'http://localhost/lar4/chart';
 var configApiUrlPathPdf = 'http://localhost/lar4/pdf';
 var configBasePath = 'http://localhost/lar4/';
+
+$.ajax({
+      method: "GET",
+      url: [configApiUrlPath, 'checkLogin'].join('/'),
+      data: { }
+    })
+      .done(function( msg ) {
+          if(msg.mess == false)
+          {
+            localStorage.removeItem("isAdminLogin");
+          }
+      }); 
 function isAdminLogin()
 {
-    var isAdminLogin = localStorage.getItem("isAdminLogin");
-    isAdminLogin = (typeof isAdminLogin !== "undefined" && isAdminLogin !== null) ? isAdminLogin : false;
-    return isAdminLogin;
+        var isAdminLogin = localStorage.getItem("isAdminLogin");
+        isAdminLogin = (typeof isAdminLogin !== "undefined" && isAdminLogin !== null) ? isAdminLogin : false;
+        return isAdminLogin;
 }
 configApp.config(['$routeProvider',
   function($routeProvider) {
@@ -52,6 +64,10 @@ configApp.config(['$routeProvider',
       when('/report/:id',{
         templateUrl : 'templates/report/edit.html',
         controller : 'ReportController'
+      }).
+      when('/profile',{
+        templateUrl : 'templates/profile/profile.html',
+        controller : 'ProfileController'
       }).
       otherwise({
           redirectTo: '/'
@@ -93,8 +109,8 @@ configApp.factory("LoginService", function($http) {
     }
   }
 });
-configControllers.controller('SignController', ['$scope', '$rootScope','$routeParams', '$location','$http', '$state', 'LoginService', '$route', 'HeaderService',
-  function($scope, $rootScope, $routeParams, $location, $http, $state, LoginService, $route, HeaderService) {
+configControllers.controller('SignController', ['$scope', '$rootScope','$routeParams', '$location','$http', '$state', 'LoginService', '$route', 'HeaderService', '$timeout',
+  function($scope, $rootScope, $routeParams, $location, $http, $state, LoginService, $route, HeaderService, $timeout) {
     if(isAdminLogin() === false)
     {
         document.title = 'AdminLTE | Sign in';
@@ -119,8 +135,7 @@ configControllers.controller('SignController', ['$scope', '$rootScope','$routePa
                   {
                       var userLogin = [res.data.id, res.data.username].join('_');
                       localStorage.setItem("isAdminLogin", userLogin );
-                      //$location.path('/'); 
-                      location.reload();     
+                      location.reload();    
                   }else
                   {
                     $scope.mess_error = 'User has not permissions .';

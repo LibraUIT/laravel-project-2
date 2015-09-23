@@ -346,4 +346,5 @@ Route::post('api/report_edit_data', array('as' => 'api_report_edit_data', 'uses'
 Route::post("api/login", array("as"=>"api_login_post", "uses" => "AuthController@postApiLogin"));
 Route::post("api/user", array("as"=>"api_user_post", "uses" => "AuthController@postApiUser"));
 Route::get("api/server", array("as"=>"api_server_get", "uses" => "HomeController@getApiServer"));
+Route::get("api/checkLogin", array("as"=>"api_check_login_get", "uses" => "AuthController@getApiChecklogin"));
 

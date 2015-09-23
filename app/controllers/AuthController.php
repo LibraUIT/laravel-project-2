@@ -387,4 +387,16 @@ class AuthController extends BaseController{
 		$user = User::find($id);
 		return Response::Json($user);
 	}
+	public function getApiChecklogin()
+	{
+		
+		if(Sentry::getUser())
+		{
+			return Response::Json(array('mess'=> TRUE));
+		}else
+		{
+			return Response::Json(array('mess'=> FALSE));
+		}
+		
+	}
 }

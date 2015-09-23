@@ -18,8 +18,8 @@ configApp.factory("HeaderService", function($http) {
     }
   }
 });
-configControllers.controller('headerController', ['$scope', '$rootScope','$routeParams', '$location','$http', '$state', 'HeaderService',
-  function($scope, $rootScope, $routeParams, $location, $http, $state, HeaderService) {
+configControllers.controller('headerController', ['$scope', '$rootScope','$routeParams', '$location','$http', '$state', 'HeaderService', '$timeout',
+  function($scope, $rootScope, $routeParams, $location, $http, $state, HeaderService, $timeout) {
   	if(isAdminLogin() !== false)
     {
 	  	 var loginInfo = isAdminLogin().split('_');
@@ -41,7 +41,7 @@ configControllers.controller('headerController', ['$scope', '$rootScope','$route
 	     $scope.SignOut = function()
 	     {
 	     	localStorage.removeItem("isAdminLogin");
-	     	$location.path('/sign');
+            $location.path('/sign');	
 	     }
  	}
 }]);
