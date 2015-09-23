@@ -92,24 +92,29 @@ Route::filter('csrf', function()
 Route::filter('check_user', function($route, $request){
 	if(!Sentry::check())
 	{
-		return Redirect::route('index')->with('error', 'Ban phai dang nhap de thuc hien thao tac nay');
+		return Redirect::route('index')->with('error', 'Bạn phải để đăng phập để thực hiện thao tác này');
 	}
 });
 Route::filter('is_login', function($route, $request){
 	if(Sentry::check())
 	{
-		return Redirect::route('index')->with('error', 'Ban khong co quyen truy cap vao he thong');
+		return Redirect::route('index')->with('error', 'Bạn không có quyền truy cập vào hệ thống');
 	}
 });
 Route::filter('check_access', function($route, $request, $role){
 	if(Sentry::check())
 	{
-		if(!Sentry::getUser()->hasAccess($role))
+		/*if(!Sentry::getUser()->hasAccess($role))
 		{
 			return Redirect::route('index')->with('error', 'Tai khoan cua ban khong du quyen truy cap thao tac nay');
-		}
+		}*/
+		$user = Sentry::getUser();
+  		$admin = Sentry::findGroupByName('Administrator');
+  		if (!$user->inGroup($admin)){
+  			return Redirect::route('index')->with('error', 'Tài khoản của bạn không có đủ quyền để thực hiện thao tác này');
+  		}
 	}else
 	{
-		return Redirect::route('index')->with('error', 'Ban phai dang nhap de thuc hien thao tac nay');
+		return Redirect::route('index')->with('error', 'Bạn phải đăng nhập để thực hiện thao tác này');
 	}
 });

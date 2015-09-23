@@ -8,8 +8,10 @@ class AnswerController extends BaseController{
 			$valid = Validator::make(Input::all(), Answer::$answer_rules, Answer::$answer_langs);
 			if($valid->passes())
 			{
+				$textInput = str_replace('<?php','<pre>&lt;&#63;php', Input::get("answer"));
+				$textInput = str_replace('?>', '&#63;&gt;</pre>', $textInput);	
 				$dataInsert = array(
-						"content" => Input::get("answer"),
+						"content" => $textInput,
 						"userID" => Sentry::getUser()->id,
 						"questionID" => $id
 					);
@@ -60,7 +62,9 @@ class AnswerController extends BaseController{
 		$answer = Answer::with("questions")->find($id);
 		if($answer)
 		{
-			if(Sentry::getUser()->hasAccess("admin") || $answer->question->userID == Sentry::getUser()->id)
+			$admin = Sentry::findGroupByName('Administrator');
+			$mod = Sentry::findGroupByName('Moderator');
+			if( Sentry::getUser()->inGroup($admin) || Sentry::getUser()->inGroup($mod) ||$answer->questions->userID == Sentry::getUser()->id)
 			{
 				Answer::where("questionID", $answer->questionID)->update(array("correct"=>"0"));
 				$answer->correct = "1";

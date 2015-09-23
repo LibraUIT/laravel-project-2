@@ -21,6 +21,9 @@ class AuthController extends BaseController{
 			}catch(Cartalyst\Sentry\Users\UserNotFoundException $e)
 			{
 				return Redirect::route('index')->with("error", "Không tồn tại tên truy cập này");
+			}catch(Cartalyst\Sentry\Users\UserNotActivatedException $e)
+			{
+				return Redirect::route('index')->with("error", "Tài khoản này chưa được kích hoạt");
 			}
 		}else
 		{
@@ -40,7 +43,7 @@ class AuthController extends BaseController{
 	}
 	public function getRegister()
 	{
-		return View::make('minhquan.register')->with('title', 'Đăng kí thành viên');
+		return View::make(Device::make().'.minhquan.register')->with('title', 'Đăng kí thành viên');
 	}
 	public function postRegister()
 	{
@@ -54,6 +57,8 @@ class AuthController extends BaseController{
 					"email" => Input::get('email'),
 					"password" => Input::get('password'),
 					"activated" => 1,
+					"status" => 1,
+					'avatar' => "uploads/default.png",
 				);
 			$dataLogin = array(
 					"username" => Input::get('username'),
@@ -61,6 +66,9 @@ class AuthController extends BaseController{
 				);
 			Sentry::getUserProvider()->create($dataInsert);
 			Sentry::Authenticate($dataLogin, false);
+			$memberGroup = Sentry::findGroupById(2);
+			$userCurrent = Sentry::getUser();
+			$userCurrent->addGroup($memberGroup);
 			return Redirect::route("index")->with("success", "Chúc mừng bạn đã đăng kí thành viên thành công");
 		}else
 		{
@@ -69,7 +77,7 @@ class AuthController extends BaseController{
 	}
 	public function getChangePass()
 	{
-		return View::make('minhquan.changepass')->with('title', 'Đổi mật khẩu');
+		return View::make(Device::make().'.minhquan.changepass')->with('title', 'Đổi mật khẩu');
 	}
 	public function postChangePass()
 	{
@@ -96,7 +104,7 @@ class AuthController extends BaseController{
 	}
 	public function getForgot()
 	{
-		return View::make("minhquan.forgot")->with("title", "Quên mật khẩu ?");
+		return View::make(Device::make().".minhquan.forgot")->with("title", "Quên mật khẩu ?");
 	}
 	public function postForgot()
 	{
@@ -113,8 +121,8 @@ class AuthController extends BaseController{
 					"email" => $user->email,
 
 					);
-				Mail::send("mail.activecode",$dataEmail,function($mess) use ($dataEmail){
-					$mess->from("demo.smtp.qhonline@gmail.com","No-reply Email");
+				Mail::send(Device::make().".mail.activecode",$dataEmail,function($mess) use ($dataEmail){
+					$mess->from("quan.li2609@gmail.com","No-reply Email");
 					$mess->to($dataEmail["email"],$dataEmail["name"]);
 					$mess->subject("Yeu cau lay lai mat khau");
 				});
@@ -143,8 +151,8 @@ class AuthController extends BaseController{
 						"email" => $user->email,
 						"pass" => $newpass
 					);
-				Mail::send("mail.resetpass",$dataEmail,function($mess) use ($dataEmail){
-					$mess->from("demo.smtp.qhonline@gmail.com","No-reply Email");
+				Mail::send(Device::make().".mail.resetpass",$dataEmail,function($mess) use ($dataEmail){
+					$mess->from("quan.li2609@gmail.com","No-reply Email");
 					$mess->to($dataEmail["email"],$dataEmail['name']);
 					$mess->subject("Mat khau moi cua ban tren qhonline.edu.vn");
 				});
@@ -164,7 +172,7 @@ class AuthController extends BaseController{
 		$user = User::find($id);
 		if($user)
 		{
-			return View::make("minhquan.profile")->with("title", "Trang cá nhân của ".$user->username)->with("users", $user);
+			return View::make(Device::make().".minhquan.profile")->with("title", "Trang cá nhân của ".$user->username)->with("users", $user);
 		}else
 		{
 			return Redirect::route("index")->with("error", "Không tồn tại tên truy cập này");
@@ -212,7 +220,7 @@ class AuthController extends BaseController{
 		$user = User::find($id);
 		if($user)
 		{
-			return View::make("minhquan.upload")->with("title", "Thay đổi ảnh đại diện")->with("users", $user);
+			return View::make(Device::make().".minhquan.upload")->with("title", "Thay đổi ảnh đại diện")->with("users", $user);
 		}else
 		{
 			return Redirect::route("index")->with("error", "Không tồn tại tên truy cập này");
@@ -287,5 +295,96 @@ class AuthController extends BaseController{
 			return Redirect::route("index")->with("error", "Bạn không có quyền thực hiện chức năng này");
 		}
 
+	}
+	public function getGroup()
+	{
+		$groups = Group::all();
+		return View::make(Device::make().'.minhquan.group')->with('title', 'Quản lý group')->with('groups', $groups);
+	}
+	public function postCreateGroup()
+	{
+		$valid = Validator::make(Input::all(), Group::$create_rules, Group::$group_langs);
+		if($valid->passes())
+		{
+			try
+			{
+			    // Create the group
+			    $group = Sentry::createGroup(array(
+			        'name'        => Input::get('add_group_name'),
+			        'permissions' => array(
+			            Input::get('add_group_permission') => 1,
+			        ),
+			    ));
+			    return Redirect::route('get_group')->with('success', 'Thêm group thành công');
+			}
+			catch (Cartalyst\Sentry\Groups\NameRequiredException $e)
+			{
+			    return Redirect::route('get_group', array(Input::get('add_group_name'), Input::get('add_group_permission')))->with('error', 'Tên không được để trống');
+			}
+			catch (Cartalyst\Sentry\Groups\GroupExistsException $e)
+			{
+			    return Redirect::route('get_group', array(Input::get('add_group_name'), Input::get('add_group_permission')))->with('error', 'Group đã tồn tại');
+			}
+
+		}else
+		{
+			return Redirect::route('get_group', array(Input::get('add_group_name'), Input::get('add_group_permission')))->with('error', $valid->errors()->first());
+		}
+	}
+	public function postDeleteGroup($id)
+	{
+		if(Request::ajax())
+		{
+			$group = Group::find($id);
+			if($group)
+			{
+				$group->delete();
+				return "OK";
+			}else
+			{
+				return Response::Json(array("status"=>"error","mess"=>"Group này không tồn tại"));
+			}
+		}
+	}
+	public function postApiLogin()
+	{
+		$valid = Validator::make(Input::all(), User::$login_rules, User::$user_langs);
+		if($valid->passes())
+		{
+			try{
+					$datalogin = array(
+							"username" => Input::get('username'),
+							"password" => Input::get('password'),
+						);
+					Sentry::Authenticate($datalogin, false);
+					$user = Sentry::findUserByCredentials($datalogin);
+					$user->status=1;
+					$user->save();
+					//return Redirect::route('index')->with("success", "Đăng nhập thành công");
+					return Response::Json(array('status'=>'success', 'data' => $user));
+			}catch(Cartalyst\Sentry\Users\WrongPasswordException $e)
+			{
+				//return Redirect::route('index')->with("error", "Mật khẩu không chính xác");
+				return Response::Json(array('status' => 'error', 'mess' => 'Password not match .'));
+			}catch(Cartalyst\Sentry\Users\UserNotFoundException $e)
+			{
+				//return Redirect::route('index')->with("error", "Không tồn tại tên truy cập này");
+				return Response::Json(array('status'=>'error', 'mess'=>'User not exits .'));
+			}catch(Cartalyst\Sentry\Users\UserNotActivatedException $e)
+			{
+				//return Redirect::route('index')->with("error", "Tài khoản này chưa được kích hoạt");
+				return Response::Json(array('status'=>'error', 'mess'=>'User not active, please contact with Administrator .'));
+			}
+		}else
+		{
+			//return Redirect::route("index")->with('error', $valid->errors()->first());
+			return Response::Json(array('status'=>'error', 'mess'=> $valid->errors()->first()));
+		}
+	}
+	public function postApiUser()
+	{
+		$id = Input::get('id');
+		$user = User::find($id);
+		return Response::Json($user);
 	}
 }

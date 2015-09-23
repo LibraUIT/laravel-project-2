@@ -1,0 +1,88 @@
+<aside class="right-side">                
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Edit report
+            <small>advanced tables</small>
+                    </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#/"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li><a href="#/report_list">Report Management</a></li>
+                    <li class="active">Edit report</li>
+                </ol>
+    </section>
+    <section edit-report class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <!-- general form elements -->
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h3 class="box-title">Edit report</h3>
+                                </div><!-- /.box-header -->
+                                <!-- form start -->
+                                <form role="form">
+                                    <div class="box-footer">
+                                        <div class="form-group">
+                                            <a ng-click="update()" class="btn btn-app">
+                                            <i class="fa fa-save"></i>
+                                            Save to Disk
+                                            </a>
+                                            <a ng-click="download()" class="btn btn-app">
+                                            <i class="fa fa-download"></i>
+                                            Generate PDF
+                                            </a>
+                                            <a class="btn btn-app">
+                                            <i class="fa fa-pencil"></i>
+                                            Insert Text
+                                            </a>
+                                        </div>
+                                        <div class="box box-info">
+                                            <div class="box-header">
+                                                <i class="fa fa-bar-chart-o"></i>
+                                                <h3 class="box-title">Select Chart</h3>
+                                            </div><!-- /.box-header -->
+                                            <div class="box-body">
+                                            
+                                               <button ng-click="insertChart('chart1')" class="btn btn-default btn-lg">Question (category)</button>
+                                               <button ng-click="insertChart('chart2')" class="btn btn-default btn-lg">Question (date)</button>
+                                               <button ng-click="insertChart('chart3')" class="btn btn-default btn-lg">Answer (category)</button> 
+                                               <button ng-click="insertChart('chart4')" class="btn btn-default btn-lg">Answer (date)</button>
+                                               <button ng-click="insertChart('chart5')" class="btn btn-default btn-lg">Question & Answer (category)</button>
+                                               <button ng-click="insertChartVs('chart6')" class="btn btn-default btn-lg">Vs</button>
+                                               <button ng-click="insertChart('chart7')" class="btn btn-default btn-lg">Users Log</button>
+                                            </div><!-- /.box-body -->
+                                        </div>
+                                        <div class="form-group">
+                                            <input ng-model="form_title" type="text" class="form-control" id="title" placeholder="Title">
+                                        </div>
+                                    </div>
+                                </form>
+                                <div packery class="packery">
+
+                                </div> 
+                            </div><!-- /.box -->
+                        </div>
+                    </div>              
+
+    </section><!-- /.content -->
+</aside>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Warning</h4>
+      </div>
+      <div class="modal-body">
+        <div class="callout callout-danger">
+                                        <h4>Please enter title .</h4>
+                                        
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

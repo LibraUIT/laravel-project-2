@@ -124,6 +124,7 @@ return array(
 		'Cartalyst\Sentry\SentryServiceProvider',
 		'Greggilbert\Recaptcha\RecaptchaServiceProvider',
 		'BrainSocket\BrainSocketServiceProvider',
+		'Maxxscho\LaravelTcpdf\LaravelTcpdfServiceProvider',
 
 	),
 
