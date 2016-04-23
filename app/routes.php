@@ -183,7 +183,7 @@ Route::group(array("before"=>"check_access:admin"), function(){
 				//return Session::get('dataSvg')[0];
 				return "true";
 		}
-				
+
 	});
 
 	Route::post("pdf/insert", function(){
@@ -222,7 +222,7 @@ Route::group(array("before"=>"check_access:admin"), function(){
 	Route::get('pdf/view/{id}', array("as"=>"get_view_pdf", "check_user", "uses"=>"MainController@getViewPdf"))->where(array("id"=>"[0-9]+"));
 });
 
-//Phan mo rong 
+//Phan mo rong
 
 Route::get('member/profile/{id}', array("as"=>"profile_get", "uses"=>"AuthController@getProfile"))->where(array("id"=>"[0-9]+"));
 
@@ -291,7 +291,7 @@ Route::get("pdf/create", function(){
 			$page = 1;
 			for($i = 0; $i < count(Session::get('dataSvg')); $i++)
 			{
-				
+
 				File::put('pdf/images/chart.svg', Session::get('dataSvg')[$i]);
 				PDF::ImageSVG($file='pdf/images/chart.svg', $x=12, $y=$hChart, $w=180, $h='', $link='', $align='', $palign='', $border=0, $fitonpage=false);
 				$dem++;
@@ -329,7 +329,6 @@ Route::get('testsql', function(){
 });
 
 Route::get('test', function(){
-	
 	return date("d-m-Y",strtotime(" 28/01/2014 00:09:49 "));
 });
 
@@ -347,4 +346,3 @@ Route::post("api/login", array("as"=>"api_login_post", "uses" => "AuthController
 Route::post("api/user", array("as"=>"api_user_post", "uses" => "AuthController@postApiUser"));
 Route::get("api/server", array("as"=>"api_server_get", "uses" => "HomeController@getApiServer"));
 Route::get("api/checkLogin", array("as"=>"api_check_login_get", "uses" => "AuthController@getApiChecklogin"));
-

@@ -143,7 +143,7 @@ body
 	background-color: #81D4FA ;
 	white-space: nowrap;
 	font-size: 13px;
-	
+
 }
 .cntcount, .cnttext
 {
@@ -182,7 +182,7 @@ body
 {
 	clear: left;
 }
-.arrowbox 
+.arrowbox
 {
 	width: 40px;
 	float: left;
@@ -192,8 +192,8 @@ body
 	display: inline-block;
     margin-left: 2px;
     vertical-align:middle;
-    width:0px; 
-    height:0px; 
+    width:0px;
+    height:0px;
     border-left:20px solid transparent;  /* left arrow slant */
     border-right:20px solid transparent; /* right arrow slant */
     border-bottom:20px solid #e4edf4;
@@ -204,8 +204,8 @@ body
 	display: inline-block;
     margin-left: 2px;
     vertical-align:middle;
-    width:0px; 
-    height:0px; 
+    width:0px;
+    height:0px;
     border-left:20px solid transparent;  /* left arrow slant */
     border-right:20px solid transparent; /* right arrow slant */
     border-top:20px solid #e4edf4;
@@ -219,7 +219,7 @@ body
 }
 #rreplycount
 {
-	width: 400px;	
+	width: 400px;
 	margin-top: 20px;
 	margin-bottom: 20px;
 }
@@ -332,8 +332,8 @@ ul.fastbar li
 {
 	display: inline-block;
     vertical-align:middle;
-    width:0px; 
-    height:0px; 
+    width:0px;
+    height:0px;
     border-left:20px solid transparent;  /* left arrow slant */
     border-right:20px solid transparent; /* right arrow slant */
     border-bottom:20px solid #e4edf4;
@@ -342,8 +342,8 @@ ul.fastbar li
 {
 	display: inline-block;
     vertical-align:middle;
-    width:0px; 
-    height:0px; 
+    width:0px;
+    height:0px;
     margin-top: 10px;
     border-left:20px solid transparent;  /* left arrow slant */
     border-right:20px solid transparent; /* right arrow slant */
@@ -639,14 +639,14 @@ pre
 	padding: 5px !important;
 	border: 1px solid transparent;
 	border-radius: 100%;
-	background-color: transparent; !important; 
+	background-color: transparent; !important;
 }
 .dropdown-alert-bell-has-alert
 {
 	padding: 5px !important;
 	border: 1px solid #F78181;
 	border-radius: 100%;
-	background-color: #F78181 !important; 
+	background-color: #F78181 !important;
 }
 .answer-success
 {
@@ -750,4 +750,15 @@ pre
 	text-align: center;
 	color: #FFF;
 	font-size: 11px;
+}
+
+.container-non-responsive {
+  /* Margin/padding copied from Bootstrap */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+
+  /* Set width to your desired site width */
+  width: 1170px;
 }

@@ -3,7 +3,7 @@
 <head>
 	<title>{{ $title}}</title>
 	<meta charset="utf-8">
-	
+
 	{{HTML::style('public/css/bootstrap.css')}}
 	{{HTML::style('public/css/bootstrap-responsive.css')}}
 	{{HTML::style('public/css/style.css')}}
@@ -13,7 +13,7 @@
 </head>
 <body>
 @include("Desktop.template.header")
-<div class="container">
+<div class="container container-non-responsive">
 	<div class="pull-left main-content">
 		@yield("content")
 	</div>
@@ -87,13 +87,13 @@ $(document).ready(function(){
 				{
 					$('.no-alert').hide();
 					$(".dropdown-menu-alert").append('<li role="presentation"><a class="acceptParty" data-id="'+msg.client.data.party_id+'" role="menuitem" tabindex="-1" href="{{URL::to('/')}}/member/chat/'+msg.client.data.party_id+'" target="_blank">'+msg.client.data.user_id +' đã đồng ý chat với bạn</a></li>');
-					$(".dropdown-alert-bell").addClass('dropdown-alert-bell-has-alert');	
+					$(".dropdown-alert-bell").addClass('dropdown-alert-bell-has-alert');
 				}
 				if(msg.client.data.user_id == fake_user_id && msg.client.data.title && msg.client.data.question_id)
 				{
 					$('.no-alert').hide();
 					$(".dropdown-menu-alert").append('<li role="presentation"><a class="acceptParty" role="menuitem" tabindex="-1" href="{{URL::to('/')}}/question/detail/'+msg.client.data.question_id+'/'+msg.client.data.title+'.html" target="_blank">'+msg.client.data.user_from+' đã trả lời câu hỏi của bạn</a></li>');
-					$(".dropdown-alert-bell").addClass('dropdown-alert-bell-has-alert');	
+					$(".dropdown-alert-bell").addClass('dropdown-alert-bell-has-alert');
 				}
 				console.log(msg);
 
@@ -101,7 +101,7 @@ $(document).ready(function(){
 			$(".bnt-drop-alert").on("click", function(){
 				$(".dropdown-alert-bell").removeClass('dropdown-alert-bell-has-alert');
 			});
-			
+
 		});
 
 </script>

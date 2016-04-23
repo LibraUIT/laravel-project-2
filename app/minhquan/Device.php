@@ -10,7 +10,7 @@ class Device{
 	public static function make()
 	{
 		$detect = new Mobile_Detect;
-		$deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'Mobile' : 'Mobile') : 'Desktop');
+		$deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'Mobile' : 'Desktop') : 'Desktop');
 		$scriptVersion = $detect->getScriptVersion();
 		return $deviceType;
 	}

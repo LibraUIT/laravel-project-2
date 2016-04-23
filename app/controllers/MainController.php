@@ -3,7 +3,7 @@ class MainController extends BaseController
 {
 	public function index()
 	{
-		$title="Việt Stack Overflow";
+		$title="Việt Stackoverflow";
 		$today = date("M d , Y");
 		$day = date('D', strtotime( $today));
 		$week = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -14,7 +14,7 @@ class MainController extends BaseController
 				$firstday = date('Y-m-d', strtotime($firstday." 00:00:00"));
 				$lastday = date('Y-m-d H:i:s');
 			}else{
-				$firstday = date('Y-m-d', strtotime("-$pos day"));	
+				$firstday = date('Y-m-d', strtotime("-$pos day"));
 				$lastday = date('Y-m-d H:i:s');
 			}
 		if(isset($_GET['tab']))
@@ -44,7 +44,7 @@ class MainController extends BaseController
 					$question=Question::with("tags","users", "answers")->orderBy("id","desc")->paginate(20);
 					break;
 			}
-			
+
 		}else{
 			$question=Question::with("tags","users", "answers")->orderBy("id","desc")->paginate(20);
 		}
@@ -75,7 +75,7 @@ class MainController extends BaseController
 				$firstday = date('Y-m-d', strtotime($firstday." 00:00:00"));
 				$lastday = date('Y-m-d H:i:s');
 			}else{
-				$firstday = date('Y-m-d', strtotime("-$pos day"));	
+				$firstday = date('Y-m-d', strtotime("-$pos day"));
 				$lastday = date('Y-m-d H:i:s');
 			}
 		if($cate == 0)
@@ -100,7 +100,7 @@ class MainController extends BaseController
 							->where("title", "like", "%".$text."%")
 							->where("created_at" , "<=", $lastday)
 							->where("created_at", ">=", $firstday)
-							->orWhere("content", "like", "%".$text."%")	
+							->orWhere("content", "like", "%".$text."%")
 							->where("created_at" , "<=", $lastday)
 							->where("created_at", ">=", $firstday)
 							->orderBy("id","desc")->paginate(20);
@@ -116,7 +116,7 @@ class MainController extends BaseController
 							->where("created_at" , "<=", $lastday)
 							->where("created_at", ">=", $firstday)
 							->orderBy("id","desc")->paginate(20);
-						break;		
+						break;
 					default:
 							$question = Question::with("tags","users", "answers")
 							->where("title", "like", "%".$text."%")
@@ -174,7 +174,7 @@ class MainController extends BaseController
 							->where("created_at" , "<=", $lastday)
 							->where("created_at", ">=", $firstday)
 							->orderBy("id","desc")->paginate(20);
-						break;		
+						break;
 					default:
 							$question = Question::with("tags","users", "answers", "categories")
 							->where("categorieID", $cate)
@@ -190,8 +190,8 @@ class MainController extends BaseController
 						->where("title", "like", "%".$text."%")
 						->orWhere("content", "like", "%".$text."%")
 						->orderBy("id","desc")->paginate(20);
-			}			
-			$cat = Categorie::find($cate);				
+			}
+			$cat = Categorie::find($cate);
 			$title="Kết quả tìm kiếm : chủ đề ".$cat->title." cho từ khoá \"".$text.'"';
 		}
 		return View::make(Device::make().".minhquan.index")->with("title",$title)->with("questions",$question);
@@ -213,7 +213,7 @@ class MainController extends BaseController
 			if(Input::get('dateFrom') != Input::get('dateTo'))
 			{
 					$total_question = count(Question::with("users")
-									->whereBetween('created_at', array(date('Y-m-d H:i:s',strtotime(Input::get('dateFrom'))), date('Y-m-d H:i:s',strtotime(Input::get('dateTo')))))->get());	
+									->whereBetween('created_at', array(date('Y-m-d H:i:s',strtotime(Input::get('dateFrom'))), date('Y-m-d H:i:s',strtotime(Input::get('dateTo')))))->get());
 			}else
 			{
 					$date = Input::get('dateFrom');
@@ -233,12 +233,12 @@ class MainController extends BaseController
 				{
 					$q = Question::with("categories")->where("categorieID", $cate->id)
 															  ->where(function($where){
-															  	 $where->whereBetween('created_at', array(date('Y-m-d H:i:s',strtotime(Input::get('dateFrom'))), date('Y-m-d H:i:s',strtotime(Input::get('dateTo')))));	
+															  	 $where->whereBetween('created_at', array(date('Y-m-d H:i:s',strtotime(Input::get('dateFrom'))), date('Y-m-d H:i:s',strtotime(Input::get('dateTo')))));
 															  })
 															  ->get();
 				}else
 				{
-					
+
 
 					$q = Question::with("categories")->where("categorieID", $cate->id)
 													 ->where("created_at", ">=", date('Y-m-d H:i:s',strtotime(Input::get('dateFrom'))) )
@@ -247,7 +247,7 @@ class MainController extends BaseController
 				}
 				$arr2 = array();
 				if($stt == 1)
-				{	
+				{
 					$v = (count($q)/$total_question)*100;
 					$arr2 = array(
 							"name" => $cate->title,
@@ -288,7 +288,7 @@ class MainController extends BaseController
 				{
 					$q = Question::with("categories")->select(array('created_at'))->where("categorieID", $cate->id)
 																				  ->where(function($where){
-																				  	 $where->whereBetween('created_at', array(date('Y-m-d H:i:s',strtotime(Input::get('dateFrom'))), date('Y-m-d H:i:s',strtotime(Input::get('dateTo')))));	
+																				  	 $where->whereBetween('created_at', array(date('Y-m-d H:i:s',strtotime(Input::get('dateFrom'))), date('Y-m-d H:i:s',strtotime(Input::get('dateTo')))));
 																				  })
 																				  ->groupBy('created_at')->get();
 				}else
@@ -335,9 +335,9 @@ class MainController extends BaseController
 	{
 		if(Request::ajax()){
 			if(Input::get('dateFrom') != Input::get('dateTo'))
-			{	
+			{
 				$total_answer = count(Answer::with("users")
-				->whereBetween('created_at', array(date('Y-m-d H:i:s',strtotime(Input::get('dateFrom'))), date('Y-m-d H:i:s',strtotime(Input::get('dateTo')))))->get());	
+				->whereBetween('created_at', array(date('Y-m-d H:i:s',strtotime(Input::get('dateFrom'))), date('Y-m-d H:i:s',strtotime(Input::get('dateTo')))))->get());
 			}else
 			{
 				$date2 = Input::get('dateTo');
@@ -355,13 +355,13 @@ class MainController extends BaseController
 			{
 			foreach ($cates as $cate) {
 					$arr2 = array();
-					
+
 					$q = $cate->questions()->where("categorieID", $cate->id)->get();
-					
+
 					$c = 0;
 					foreach ($q as $q1) {
 						if(Input::get('dateFrom') != Input::get('dateTo'))
-						{	
+						{
 							$answer = Answer::with("users")->where("questionID", $q1->id)->orderBy("correct", "desc")
 							->whereBetween('created_at', array(date('Y-m-d H:i:s',strtotime(Input::get('dateFrom'))), date('Y-m-d H:i:s',strtotime(Input::get('dateTo')))))
 							->get();
@@ -375,7 +375,7 @@ class MainController extends BaseController
 						$c = $c +count($answer);
 					}
 					if($stt ==1)
-					{	
+					{
 						$arr2['name'] = $cate->title;
 						$arr2['sliced'] = true;
 						$arr2['selected'] =true;
@@ -386,7 +386,7 @@ class MainController extends BaseController
 						$arr2[] = $cate->title;
 						$arr2[] = ($c/$total_answer)*100;
 					}
-					
+
 					$arr1[] = $arr2;
 					$stt++;
 
@@ -395,9 +395,9 @@ class MainController extends BaseController
 			{
 				$arr1 = null;
 			}
-			
+
 			return Response::Json($arr1);
-			
+
 		}
 	}
 	public function getQuesAndAnsChart()
@@ -414,7 +414,7 @@ class MainController extends BaseController
 			foreach ($cates as $cate) {
 				$categories[] = $cate->title;
 				if(Input::get('dateFrom') != Input::get('dateTo'))
-				{	
+				{
 					$questions = Question::with("categories")->where("categorieID", $cate->id)
 									->whereBetween('created_at', array(date('Y-m-d H:i:s',strtotime(Input::get('dateFrom'))), date('Y-m-d H:i:s',strtotime(Input::get('dateTo')))))
 									->get();
@@ -451,7 +451,7 @@ class MainController extends BaseController
 			}
 			$arr1['data'][] = $arr2;
 			$arr1['data'][] = $arr3;
-			$arr1['categories'] = $categories;	
+			$arr1['categories'] = $categories;
 			return Response::Json($arr1);
 		}
 	}
@@ -472,7 +472,7 @@ class MainController extends BaseController
 			foreach ($cates as $cate) {
 				$arr2 = array();
 				$arr2['name'] = $cate->title;
-				$series[$cate->title] = $cate->id;				
+				$series[$cate->title] = $cate->id;
 				$q = Question::with("categories")->where("categorieID", $cate->id)->groupBy('created_at')->get();
 				$arr3 = array();
 				foreach ($q as $key => $q1) {
@@ -493,9 +493,9 @@ class MainController extends BaseController
 					}
 					foreach ($answers as $ans) {
 						$arr3[] = date('Y-m-d', strtotime($ans['created_at']));
-					}			
+					}
 				}
-				$arr4 = array_count_values($arr3);		
+				$arr4 = array_count_values($arr3);
 				$arr5 = array();
 				$arrDateChild = array();
 				while (strtotime($date) <= strtotime($end_date)) {
@@ -513,7 +513,7 @@ class MainController extends BaseController
 				$arr2['data'] = $arr5;
 				$arr1[] = $arr2;
 				$date = date('Y-m-d',strtotime(Input::get('dateFrom')));
-				
+
 			}
 			$arr['data']=$arr1;
 			$arr['categories']=$arrDate;
@@ -529,7 +529,7 @@ class MainController extends BaseController
 			$date = date('Y-m-d',strtotime(Input::get('dateFrom')));
 			// End date
 			$end_date = date('Y-m-d',strtotime(Input::get('dateTo')));
-			
+
 			if(Input::get('dateFrom') != Input::get('dateTo'))
 			{
 				$users = User::select(array('last_login'))
@@ -549,7 +549,7 @@ class MainController extends BaseController
 			foreach ($users as $user) {
 				$arr1[] = date('Y-m-d', strtotime($user['last_login']));
 			}
-			$arr2 = array_count_values($arr1);		
+			$arr2 = array_count_values($arr1);
 			$arr3 = array();
 			$arrDateChild = array();
 			while (strtotime($date) <= strtotime($end_date)) {
@@ -568,7 +568,7 @@ class MainController extends BaseController
 			$arr4['categories']=$arrDateChild;
 			$arr5 = array();
 			$arr5['name'] = 'Số lượt';
-			$arr5['data'] = $arr3; 
+			$arr5['data'] = $arr3;
 			$arr4['data'][] = $arr5;
 			return Response::Json($arr4);
 		}
@@ -585,7 +585,7 @@ class MainController extends BaseController
 			$users = User::where("last_login", ">=", date('Y-m-d H:i:s',strtotime($date)) )
 									->where("last_login", "<", $tomorrow)
 									->get();
-			
+
 			$arr1 = array();
 			foreach ($users as $user) {
 				$arr1[] = $user->username;
@@ -609,7 +609,7 @@ class MainController extends BaseController
 				$title = Categorie::find($value);
 				$categories[] = $title->title;
 				if(Input::get('dateFrom') != Input::get('dateTo'))
-				{	
+				{
 					$questions = Question::with("categories")->where("categorieID", $value)
 									->whereBetween('created_at', array(date('Y-m-d H:i:s',strtotime(Input::get('dateFrom'))), date('Y-m-d H:i:s',strtotime(Input::get('dateTo')))))
 									->get();
@@ -646,7 +646,7 @@ class MainController extends BaseController
 			}
 			$arr1['data'][] = $arr2;
 			$arr1['data'][] = $arr3;
-			$arr1['categories'] = $categories;	
+			$arr1['categories'] = $categories;
 			return Response::Json($arr1);
 		}
 	}
